@@ -1,0 +1,4 @@
+--add or remove or rename from group can be performed by admin only
+--admin can decide if group can be renamed, add remove by members or not 
+--multiple admins
+--add admin and remove admin
