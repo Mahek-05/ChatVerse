@@ -12,6 +12,7 @@ import { useNavigate } from "react-router-dom";
 const Signup = () => {
   const [show, setShow] = useState(false); 
   const handleClick = () => setShow(!show);
+
   const toast = useToast();
   const navigate = useNavigate(); 
 
@@ -23,8 +24,13 @@ const Signup = () => {
   const [picLoading, setPicLoading] = useState(false);
 
 const submitHandler = async () => {
+  // Set loading state to true
     setPicLoading(true);
+
+    // Check if any required field is empty
     if (!name || !email || !password || !confirmpassword) {
+      
+      // Display a warning toast if any field is missing
       toast({
         title: "Please Fill all the Feilds",
         status: "warning",
@@ -32,10 +38,16 @@ const submitHandler = async () => {
         isClosable: true,
         position: "bottom",
       });
+
+      // Set loading state to false
       setPicLoading(false);
+      // Exit the function
       return;
     }
+
+    // Check if password and confirm password match
     if (password !== confirmpassword) {
+      // Display a warning toast if passwords do not match
       toast({
         title: "Passwords Do Not Match",
         status: "warning",
@@ -43,10 +55,16 @@ const submitHandler = async () => {
         isClosable: true,
         position: "bottom",
       });
+      // Exit the function
       return;
     }
+    
+    // Log the user input values to the console
     console.log(name, email, password, pic);
+    
     try {
+      // Send a POST request to the server to register the user
+      // and the servers response is stored in response variable
         const response = await fetch('/api/user', {
         method: 'POST',
         headers: {
@@ -59,7 +77,11 @@ const submitHandler = async () => {
           pic,
         })
       });
+
+      // Parse the response data
       const data = await response.json();
+
+      // Optionally, use axios for the request (commented out)
       // const config = {
       //   headers: {
       //     "Content-type": "application/json",
@@ -75,7 +97,11 @@ const submitHandler = async () => {
       //   },
       //   config
       // );
+
+      // Log the response data to the console
       console.log(data);
+
+       // Display a success toast on successful registration
       toast({
         title: "Registration Successful",
         status: "success",
@@ -83,10 +109,19 @@ const submitHandler = async () => {
         isClosable: true,
         position: "bottom",
       });
+      
+      // Store the user data in localStorage
       localStorage.setItem("userInfo", JSON.stringify(data));
+      
+      // Set loading state to false
       setPicLoading(false);
+      
+      // Redirect to the chats page
       navigate("/chats");
+
     } catch (error) {
+
+      // Display an error toast if the request fails
       toast({
         title: "Error Occured!",
         description: error.response.data.message,
@@ -95,6 +130,8 @@ const submitHandler = async () => {
         isClosable: true,
         position: "bottom",
       });
+
+      // Set loading state to false
       setPicLoading(false);
     }
   };
