@@ -1,11 +1,11 @@
 import React from 'react';
 import { IconButton, Modal, useDisclosure, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody, ModalCloseButton, Button, Avatar, Image, Text } from '@chakra-ui/react';
 import { ViewIcon } from '@chakra-ui/icons';
-import { ChatState } from '../../Context/ChatProvider';
 
-const ProfileModal = ({children}) => {
+
+const ProfileModal = ({user, children}) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { user } = ChatState();
+  
   return (
     <>
       {

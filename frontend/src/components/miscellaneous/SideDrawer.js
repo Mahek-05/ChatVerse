@@ -83,7 +83,6 @@ const SideDrawer = () => {
         try{
             setLoadingChat(true);
             const token = user.token; // Assuming user.token contains the JWT token
-            const searchQuery = encodeURIComponent(search); // Encode search query for URL
 
             const response = await fetch('api/chat', {
                 method: 'POST',
@@ -136,7 +135,7 @@ const SideDrawer = () => {
                 <Tooltip label="Search Users" hasArrow placement='bottom-end'>
                     <Button variant="ghost" onClick={onOpen}>
                         <SearchIcon m='1'/>
-                        <Text d={{base: "none", md: "flex"}} px="4">
+                        <Text display={{base: "none", md: "flex"}} px="4">
                             Search User
                         </Text>
                     </Button>                          
@@ -157,9 +156,9 @@ const SideDrawer = () => {
                             <Avatar name={user.name} src={user.pic} size="sm" cursor="pointer"/>
                         </MenuButton>
                         <MenuList>
-                            <ProfileModal>
+                            <ProfileModal user={user}>
                                 <MenuItem>My Profile</MenuItem>
-                            </ProfileModal>
+                            </ProfileModal >
                             <MenuDivider />
                             <MenuItem onClick={logout}>Logout</MenuItem>
                         </MenuList>

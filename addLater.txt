@@ -2,3 +2,4 @@
 --admin can decide if group can be renamed, add remove by members or not 
 --multiple admins
 --add admin and remove admin
+--cannot delete group admin without making another admin

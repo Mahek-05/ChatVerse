@@ -87,7 +87,7 @@ const createGroupChat = asyncHandler( async(req, res) => {
     }
 
     var users = JSON.parse(req.body.users);
-    console.log(users);
+    
     if (users.length < 2) {
         return res
             .status(400)
