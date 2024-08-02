@@ -1,5 +1,5 @@
 import React from 'react';
-import { IconButton, Modal, useDisclosure, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody, ModalCloseButton, Button, Avatar, Image, Text } from '@chakra-ui/react';
+import { IconButton, Modal, useDisclosure, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody, ModalCloseButton, Button, Image, Text } from '@chakra-ui/react';
 import { ViewIcon } from '@chakra-ui/icons';
 
 

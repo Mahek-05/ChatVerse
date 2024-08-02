@@ -180,6 +180,7 @@ const CreateGroupChatModal = ({ children }) => {
                                 placeholder='Chat Name'
                                 mb={3}
                                 onChange={(e) => setGroupChatName(e.target.value)}
+                                autoComplete="off"
                             />
                         </FormControl>
                         <FormControl>
@@ -187,6 +188,7 @@ const CreateGroupChatModal = ({ children }) => {
                                 placeholder='Add Users eg: John, Jane'
                                 mb={3}
                                 onChange={(e) => handleSearch(e.target.value)}
+                                autoComplete="off"
                             />
                         </FormControl>
 

@@ -1,17 +1,36 @@
-import React, { useState } from 'react';
-import { Box, Button, Menu, MenuButton, 
-    MenuList, Text, Tooltip, Avatar, 
-    MenuItem, MenuDivider, Drawer, 
-    useDisclosure, DrawerOverlay, DrawerContent, 
-    DrawerHeader, DrawerBody, Input, DrawerCloseButton, 
-    useToast, 
-    Spinner} from '@chakra-ui/react';
-import { BellIcon, SearchIcon, ChevronDownIcon } from '@chakra-ui/icons';
-import { ChatState } from '../../Context/ChatProvider';
-import ProfileModal from './ProfileModal';
-import { useNavigate } from 'react-router-dom';
-import ChatLoading from '../ChatLoading';
-import UserListItem from '../userAvatar/UserListItem';
+import { Button } from "@chakra-ui/button";
+import { useDisclosure } from "@chakra-ui/hooks";
+import { Input } from "@chakra-ui/input";
+import { Box, Text } from "@chakra-ui/layout";
+import {
+    Menu,
+    MenuButton,
+    MenuDivider,
+    MenuItem,
+    MenuList,
+} from "@chakra-ui/menu";
+import {
+    Drawer,
+    DrawerBody,
+    DrawerContent,
+    DrawerHeader,
+    DrawerOverlay,
+    DrawerCloseButton
+} from "@chakra-ui/modal";
+import { Tooltip } from "@chakra-ui/tooltip";
+import { BellIcon, ChevronDownIcon, SearchIcon } from "@chakra-ui/icons";
+import { Avatar } from "@chakra-ui/avatar";
+import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { useToast } from "@chakra-ui/toast";
+import ChatLoading from "../ChatLoading";
+import { Spinner } from "@chakra-ui/spinner";
+import ProfileModal from "./ProfileModal";
+import NotificationBadge from "react-notification-badge";
+import { Effect } from "react-notification-badge";
+import { getSender } from "../../config/ChatLogics";
+import UserListItem from "../userAvatar/UserListItem";
+import { ChatState } from "../../Context/ChatProvider";
 
 const SideDrawer = () => {
     const [search, setSearch] = useState("");
@@ -19,7 +38,15 @@ const SideDrawer = () => {
     const [loading, setLoading] = useState(false);
     const [loadingChat, setLoadingChat] = useState();
     
-    const { user, setSelectedChat, chats, setChats } = ChatState();
+    const {
+        setSelectedChat,
+        user,
+        notification,
+        setNotification,
+        chats,
+        setChats,
+    } = ChatState();
+
     const navigate = useNavigate(); 
 
     const { isOpen, onOpen, onClose } = useDisclosure()
@@ -45,7 +72,7 @@ const SideDrawer = () => {
 
         try{
             setLoading(true);
-            const token = user.token; // Assuming user.token contains the JWT token
+            const token = user.token; 
             const searchQuery = encodeURIComponent(search); // Encode search query for URL
 
             const response = await fetch(`/api/user?search=${searchQuery}`, {
@@ -135,7 +162,7 @@ const SideDrawer = () => {
                 <Tooltip label="Search Users" hasArrow placement='bottom-end'>
                     <Button variant="ghost" onClick={onOpen}>
                         <SearchIcon m='1'/>
-                        <Text display={{base: "none", md: "flex"}} px="4">
+                        <Text display={{base: "none", md: "flex"}} px={4}>
                             Search User
                         </Text>
                     </Button>                          
@@ -146,9 +173,27 @@ const SideDrawer = () => {
                 <div>
                     <Menu >
                         <MenuButton p={1}>
+                            <NotificationBadge
+                                count={notification.length}
+                                effect={Effect.SCALE}
+                            />
                             <BellIcon boxSize={6} m='1'/>
                         </MenuButton>
-                        <MenuList>
+                        <MenuList pl={2}>
+                            {!notification.length && "No New Messages"}
+                            {notification.map((notif) => (
+                                    <MenuItem
+                                    key={notif._id}
+                                    onClick={() => {
+                                        setSelectedChat(notif.chat);
+                                        setNotification(notification.filter((n) => n !== notif));
+                                    }}
+                                    >
+                                    {notif.chat.isGroupChat
+                                        ? `New Message in ${notif.chat.chatName}`
+                                        : `New Message from ${getSender(user, notif.chat.users)}`}
+                                    </MenuItem>
+                            ))}
                         </MenuList>
                     </Menu>
                     <Menu>
@@ -174,7 +219,7 @@ const SideDrawer = () => {
                 <DrawerOverlay/>
                 <DrawerContent>
                     
-                    <DrawerCloseButton/>
+                    <DrawerCloseButton />
 
                     <DrawerHeader borderBottomWidth="1px">
                         Search Users

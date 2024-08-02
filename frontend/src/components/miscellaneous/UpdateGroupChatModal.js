@@ -261,8 +261,9 @@ const UpdateGroupChatModal = ({  fetchMessages, fetchAgain, setFetchAgain }) => 
                         <Input
                             placeholder="Chat Name"
                             mb={3}
-                            value={groupChatName}
+                            value={groupChatName || ''}
                             onChange={(e) => setGroupChatName(e.target.value)}
+                            autoComplete="off"
                         />
                         <Button
                             variant="solid"
@@ -278,7 +279,9 @@ const UpdateGroupChatModal = ({  fetchMessages, fetchAgain, setFetchAgain }) => 
                         <Input
                             placeholder="Add User to group"
                             mb={1}
+                            value={search || ''}
                             onChange={(e) => handleSearch(e.target.value)}
+                            autoComplete="off"
                         />
                     </FormControl>
 

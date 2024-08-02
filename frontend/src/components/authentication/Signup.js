@@ -23,7 +23,9 @@ const Signup = () => {
   const [pic, setPic] = useState();
   const [picLoading, setPicLoading] = useState(false);
 
-const submitHandler = async () => {
+const submitHandler = async (e) => {
+  e.preventDefault(); // Prevent default form submission behavior
+
   // Set loading state to true
     setPicLoading(true);
 
@@ -65,7 +67,7 @@ const submitHandler = async () => {
     try {
       // Send a POST request to the server to register the user
       // and the servers response is stored in response variable
-        const response = await fetch('/api/user', {
+      const response = await fetch('/api/user', {
         method: 'POST',
         headers: {
           "Content-type": "application/json"
@@ -80,26 +82,6 @@ const submitHandler = async () => {
 
       // Parse the response data
       const data = await response.json();
-
-      // Optionally, use axios for the request (commented out)
-      // const config = {
-      //   headers: {
-      //     "Content-type": "application/json",
-      //   },
-      // };
-      // const { data } = await axios.post(
-      //   "/api/user",
-      //   {
-      //     name,
-      //     email,
-      //     password,
-      //     pic,
-      //   },
-      //   config
-      // );
-
-      // Log the response data to the console
-      console.log(data);
 
        // Display a success toast on successful registration
       toast({
@@ -148,7 +130,7 @@ const submitHandler = async () => {
       });
       return;
     }
-    console.log(pics);
+
     if (pics.type === "image/jpeg" || pics.type === "image/png") {
       const data = new FormData();
       data.append("file", pics);
@@ -161,7 +143,6 @@ const submitHandler = async () => {
         .then((res) => res.json())
         .then((data) => {
           setPic(data.url.toString());
-          console.log(data.url.toString());
           setPicLoading(false);
         })
         .catch((err) => {
@@ -182,85 +163,88 @@ const submitHandler = async () => {
   };
 
   return (
-    // for vertically stacking up the form fields
-    <VStack spacing = '5px'>
-      
-      {/* form field for name */}
-      <FormControl id="name" isRequired>
-        <FormLabel>Name</FormLabel>
-        <Input
-          placeholder="Enter Your Name"
-          onChange={(e) => setName(e.target.value)}
-        />
-      </FormControl>
-      
-      {/* form field for email */}
-      <FormControl id="email" isRequired>
-        <FormLabel>Email Address</FormLabel>
-        <Input
-          type="email"
-          placeholder="Enter Your Email Address"
-          onChange={(e) => setEmail(e.target.value)}
-        />
-      </FormControl>
-      
-      {/* form field for password */}
-      <FormControl id="password" isRequired>
-        <FormLabel>Password</FormLabel>
-        <InputGroup size="md">
+    <form onSubmit={submitHandler}>
+      {/* for vertically stacking up the form fields */}
+      <VStack spacing = '5px'>
+        {/* form field for name */}
+        <FormControl id="name" isRequired>
+          <FormLabel>Name</FormLabel>
           <Input
-            type={show ? "text" : "password"}
-            placeholder="Enter Password"
-            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Enter Your Name"
+            onChange={(e) => setName(e.target.value)}
           />
-          <InputRightElement width="4.5rem">
-            <Button h="1.75rem" size="sm" onClick={handleClick}>
-              {show ? "Hide" : "Show"}
-            </Button>
-          </InputRightElement>
-        </InputGroup>
-      </FormControl>
-      
-      {/* form field for confirm password */}
-      <FormControl id="confirm-password" isRequired>
-        <FormLabel>Confirm Password</FormLabel>
-        <InputGroup size="md">
+        </FormControl>
+        
+        {/* form field for email */}
+        <FormControl id="email" isRequired>
+          <FormLabel>Email Address</FormLabel>
           <Input
-            type={show ? "text" : "password"}
-            placeholder="Confirm password"
-            onChange={(e) => setConfirmpassword(e.target.value)}
+            type="email"
+            placeholder="Enter Your Email Address"
+            onChange={(e) => setEmail(e.target.value)}
           />
-          <InputRightElement width="4.5rem">
-            <Button h="1.75rem" size="sm" onClick={handleClick}>
-              {show ? "Hide" : "Show"}
-            </Button>
-          </InputRightElement>
-        </InputGroup>
-      </FormControl>
+        </FormControl>
+        
+        {/* form field for password */}
+        <FormControl id="password" isRequired>
+          <FormLabel>Password</FormLabel>
+          <InputGroup size="md">
+            <Input
+              type={show ? "text" : "password"}
+              placeholder="Enter Password"
+              onChange={(e) => setPassword(e.target.value)}
+              autoComplete='off'
+            />
+            <InputRightElement width="4.5rem">
+              <Button h="1.75rem" size="sm" onClick={handleClick}>
+                {show ? "Hide" : "Show"}
+              </Button>
+            </InputRightElement>
+          </InputGroup>
+        </FormControl>
+        
+        {/* form field for confirm password */}
+        <FormControl id="confirm-password" isRequired>
+          <FormLabel>Confirm Password</FormLabel>
+          <InputGroup size="md">
+            <Input
+              type={show ? "text" : "password"}
+              placeholder="Confirm password"
+              onChange={(e) => setConfirmpassword(e.target.value)}
+              autoComplete='off'
+            />
+            <InputRightElement width="4.5rem">
+              <Button h="1.75rem" size="sm" onClick={handleClick}>
+                {show ? "Hide" : "Show"}
+              </Button>
+            </InputRightElement>
+          </InputGroup>
+        </FormControl>
+        
+        {/* form field for picture upload */}
+        <FormControl id="pic">
+          <FormLabel>Upload your Picture</FormLabel>
+          <Input
+            type="file"
+            p={1.5}
+            accept="image/*"
+            onChange={(e) => postDetails(e.target.files[0])}
+          />
+        </FormControl>
+        
+        {/* form submit button */}
+        <Button
+          type="submit"
+          colorScheme="blue"
+          width="100%"
+          style={{ marginTop: 15 }}
+          isLoading={picLoading}
+        >
+          Sign Up
+        </Button>
       
-      {/* form field for picture upload */}
-      <FormControl id="pic">
-        <FormLabel>Upload your Picture</FormLabel>
-        <Input
-          type="file"
-          p={1.5}
-          accept="image/*"
-          onChange={(e) => postDetails(e.target.files[0])}
-        />
-      </FormControl>
-      
-      {/* form submit button */}
-      <Button
-        colorScheme="blue"
-        width="100%"
-        style={{ marginTop: 15 }}
-        onClick={submitHandler}
-        isLoading={picLoading}
-      >
-        Sign Up
-      </Button>
-    
-    </VStack>
+      </VStack>
+    </form>
   );
 };
 
