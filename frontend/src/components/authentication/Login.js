@@ -80,7 +80,6 @@ const Login = () => {
   return (
     <form onSubmit={submitHandler}>
       <VStack spacing="10px">
-        
         <FormControl id="login-email" isRequired>
           <FormLabel>Email Address</FormLabel>
             <Input
@@ -88,6 +87,7 @@ const Login = () => {
               placeholder="Enter Your Email Address"
               onChange={(e) => setEmail(e.target.value)}
               value={email || ''}
+              focusBorderColor='pink.700'
             />
         </FormControl>
         <FormControl id="login-password" isRequired>
@@ -99,6 +99,7 @@ const Login = () => {
               placeholder="Enter password"
               autoComplete="off"
               value={password || ''}
+              focusBorderColor='pink.700'
             />
             <InputRightElement width="4.5rem">
               <Button h="1.75rem" size="sm" onClick={handleClick}>
@@ -109,7 +110,7 @@ const Login = () => {
         </FormControl>
         <Button
           type="submit"
-          colorScheme="blue"
+          colorScheme="pink"
           width="100%"
           style={{ marginTop: 15 }}
           isLoading={loading}
@@ -118,8 +119,8 @@ const Login = () => {
         </Button>
         
         <Button
-          variant="solid"
-          colorScheme="red"
+          variant="outline"
+          colorScheme="pink"
           width="100%"
           onClick={() => {
             setEmail("guest@example.com");

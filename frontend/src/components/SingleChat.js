@@ -232,7 +232,6 @@ const SingleChat = ({fetchAgain, setFetchAgain}) => {
                         display="flex"
                         flexDir="column"
                         p={3}
-                        bg="#E8E8E8"
                         w="100%"
                         h="100%"
                         borderRadius="lg"
@@ -273,7 +272,7 @@ const SingleChat = ({fetchAgain, setFetchAgain}) => {
                             )}
                             <Input
                                 variant="filled"
-                                bg="#E0E0E0"
+                                bg="gray.50"
                                 placeholder="Enter a message.."
                                 value={newMessage || ''}
                                 onChange={typingHandler}

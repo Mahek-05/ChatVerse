@@ -158,7 +158,9 @@ const CreateGroupChatModal = ({ children }) => {
             <Modal onClose={onClose} isOpen={isOpen} isCentered>
                 <ModalOverlay />
                 <ModalCloseButton />
-                <ModalContent>
+                <ModalContent
+                    bg="gray.50"
+                >
                     <ModalHeader
                         as='b'
                         fontSize='4xl'
@@ -181,6 +183,7 @@ const CreateGroupChatModal = ({ children }) => {
                                 mb={3}
                                 onChange={(e) => setGroupChatName(e.target.value)}
                                 autoComplete="off"
+                                focusBorderColor='pink.700'
                             />
                         </FormControl>
                         <FormControl>
@@ -189,6 +192,7 @@ const CreateGroupChatModal = ({ children }) => {
                                 mb={3}
                                 onChange={(e) => handleSearch(e.target.value)}
                                 autoComplete="off"
+                                focusBorderColor='pink.700'
                             />
                         </FormControl>
 
@@ -217,7 +221,7 @@ const CreateGroupChatModal = ({ children }) => {
 
                     </ModalBody>
                     <ModalFooter>
-                        <Button onClick={handleSubmit} colorScheme="blue">
+                        <Button onClick={handleSubmit} colorScheme="pink">
                         Create Chat
                         </Button>
                     </ModalFooter>

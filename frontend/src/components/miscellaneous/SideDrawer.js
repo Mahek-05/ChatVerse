@@ -154,20 +154,20 @@ const SideDrawer = () => {
                 display="flex"
                 justifyContent='space-between'
                 alignItems="center"
-                bg="white"
-                w="100%"
                 p="5px 10px 5px 10px"
-                borderWidth="5px"
+                borderWidth="2px"
+                borderRadius="6px"
+                m="8px"
             >
                 <Tooltip label="Search Users" hasArrow placement='bottom-end'>
-                    <Button variant="ghost" onClick={onOpen}>
+                    <Button variant="ghost" onClick={onOpen} colorScheme="white">
                         <SearchIcon m='1'/>
                         <Text display={{base: "none", md: "flex"}} px={4}>
                             Search User
                         </Text>
                     </Button>                          
                 </Tooltip>
-                <Text as='b' fontSize="2xl" fontFamily="Work sans">
+                <Text fontSize="3xl" fontFamily="Work sans" >
                     ChatVerse
                 </Text>
                 <div>
@@ -177,7 +177,7 @@ const SideDrawer = () => {
                                 count={notification.length}
                                 effect={Effect.SCALE}
                             />
-                            <BellIcon boxSize={6} m='1'/>
+                            <BellIcon boxSize={6} m='1' color="white"/>
                         </MenuButton>
                         <MenuList pl={2}>
                             {!notification.length && "No New Messages"}
@@ -197,15 +197,20 @@ const SideDrawer = () => {
                         </MenuList>
                     </Menu>
                     <Menu>
-                        <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
+                        <MenuButton variant="ghost" colorScheme="white" as={Button} rightIcon={<ChevronDownIcon color="pink.700" />}>
                             <Avatar name={user.name} src={user.pic} size="sm" cursor="pointer"/>
                         </MenuButton>
-                        <MenuList>
+                        <MenuList
+                            color="black"
+                            bg="gray.50"
+                            paddingLeft="7px"
+                            paddingRight="7px"
+                        >
                             <ProfileModal user={user}>
-                                <MenuItem>My Profile</MenuItem>
+                                <MenuItem as="b">My Profile</MenuItem>
                             </ProfileModal >
                             <MenuDivider />
-                            <MenuItem onClick={logout}>Logout</MenuItem>
+                            <MenuItem as="b" onClick={logout}>Logout</MenuItem>
                         </MenuList>
                     </Menu>
                 </div>

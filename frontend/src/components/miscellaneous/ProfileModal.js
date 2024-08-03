@@ -22,7 +22,7 @@ const ProfileModal = ({user, children}) => {
 
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
-        <ModalContent>
+        <ModalContent bg="gray.50">
           <ModalCloseButton />
           <ModalHeader
             as='b'
@@ -60,7 +60,7 @@ const ProfileModal = ({user, children}) => {
             display='flex'
             justifyContent='center'
           >
-            <Button fontSize='xl' colorScheme='blue' mr={3} onClick={onClose}>
+            <Button fontSize='xl' colorScheme='pink' mr={3} onClick={onClose}>
               Close
             </Button>
           </ModalFooter>

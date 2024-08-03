@@ -172,6 +172,7 @@ const submitHandler = async (e) => {
           <Input
             placeholder="Enter Your Name"
             onChange={(e) => setName(e.target.value)}
+            focusBorderColor='pink.700'
           />
         </FormControl>
         
@@ -182,6 +183,7 @@ const submitHandler = async (e) => {
             type="email"
             placeholder="Enter Your Email Address"
             onChange={(e) => setEmail(e.target.value)}
+            focusBorderColor='pink.700'
           />
         </FormControl>
         
@@ -194,6 +196,7 @@ const submitHandler = async (e) => {
               placeholder="Enter Password"
               onChange={(e) => setPassword(e.target.value)}
               autoComplete='off'
+              focusBorderColor='pink.700'
             />
             <InputRightElement width="4.5rem">
               <Button h="1.75rem" size="sm" onClick={handleClick}>
@@ -212,6 +215,7 @@ const submitHandler = async (e) => {
               placeholder="Confirm password"
               onChange={(e) => setConfirmpassword(e.target.value)}
               autoComplete='off'
+              focusBorderColor='pink.700'
             />
             <InputRightElement width="4.5rem">
               <Button h="1.75rem" size="sm" onClick={handleClick}>
@@ -229,16 +233,17 @@ const submitHandler = async (e) => {
             p={1.5}
             accept="image/*"
             onChange={(e) => postDetails(e.target.files[0])}
+            focusBorderColor='pink.700'
           />
         </FormControl>
         
         {/* form submit button */}
         <Button
           type="submit"
-          colorScheme="blue"
           width="100%"
           style={{ marginTop: 15 }}
           isLoading={picLoading}
+          colorScheme='pink'
         >
           Sign Up
         </Button>
