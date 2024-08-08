@@ -52,6 +52,8 @@ const Login = () => {
       
       const data = await response.json();
       
+      setUser(data);
+
       toast({
         title: "Login Successful",
         status: "success",
@@ -59,10 +61,7 @@ const Login = () => {
         isClosable: true,
         position: "bottom",
       });
-      
-      setUser(data);
-      localStorage.setItem("userInfo", JSON.stringify(data));
-      setLoading(false);
+
       navigate("/chats");
     } catch (error) {
       toast({
@@ -73,6 +72,7 @@ const Login = () => {
         isClosable: true,
         position: "bottom",
       });
+    } finally {
       setLoading(false);
     }
   };
