@@ -10,7 +10,7 @@ import ScrollableChat from "./ScrollableChat";
 import Lottie from "react-lottie";
 import animationData from "../animations/typing_animation.json";
 import io from "socket.io-client";
-const ENDPOINT = "https://chatverse-pqwd.onrender.com/" // for deployment
+const ENDPOINT = "https://chatverse-pqwd.onrender.com" // for deployment
 // const ENDPOINT = "http://localhost:5000"; // for local development
 var socket, selectedChatCompare;
 
