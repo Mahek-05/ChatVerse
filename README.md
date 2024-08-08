@@ -13,8 +13,8 @@ Uses Socket.io for real time communication and stores user details in encrypted 
 **Database:** Mongo DB
   
 ## Demo
-
-Link
+you can view the app live on this link:
+[https://chatverse-bjpe.onrender.com/](https://chatverse-bjpe.onrender.com/)
 
 ## Run Locally
 
