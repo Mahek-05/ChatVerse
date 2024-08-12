@@ -14,7 +14,7 @@ Uses Socket.io for real time communication and stores user details in encrypted 
   
 ## Demo
 you can view the app live on this link:
-[https://chatverse-bjpe.onrender.com/](https://chatverse-bjpe.onrender.com/)
+[https://chatverse-pqwd.onrender.com/]([https://chatverse-pqwd.onrender.com/])
 
 ## Run Locally
 
