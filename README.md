@@ -14,7 +14,7 @@ Uses Socket.io for real time communication and stores user details in encrypted 
   
 ## Demo
 you can view the app live on this link:
-[https://chatverse-pqwd.onrender.com/](https://chatverse-pqwd.onrender.com/)
+[https://chatverse-90lr.onrender.com/](https://chatverse-90lr.onrender.com/)
 
 since the project is deployed on free tier of the service,  it might take 50 secs or more to load, so please have patience.
 
