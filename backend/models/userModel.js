@@ -13,7 +13,6 @@ const userSchema = mongoose.Schema({
     },
     password: {
         type: String,
-        required: true,
     },
     pic: {
         type: String,
@@ -40,8 +39,11 @@ userSchema.pre('save', async function (next) {
         next();
     }
 
-    const salt = await bcrypt.genSalt(10);
-    this.password = await bcrypt.hash(this.password, salt);
+    if(this.password) {
+        const salt = await bcrypt.genSalt(10);
+        this.password = await bcrypt.hash(this.password, salt);
+    }
+
 });
 
 const User = mongoose.model("User", userSchema);

@@ -1,62 +1,145 @@
 const asyncHandler = require("express-async-handler");
 const User = require('../models/userModel');
 const generateToken = require("../config/generateToken");
+const axios = require("axios")
 
 const registerUser = asyncHandler( async(req, res) => {
-    const { name,email,password,pic } = req.body;
+    if(req.body.googleAccessToken) {
+        const {googleAccessToken} = req.body;
 
-    if(!name || !password || !email) {
-        res.status(400);
-        throw new Error("Please enter all the deatils in all the fields");
-    }
+        axios.get("https://www.googleapis.com/oauth2/v3/userinfo", {
+            headers: {
+                "Authorization": `Bearer ${googleAccessToken}`
+            }   
+        }).then(async response => {
+            console.log("Google OAuth response:", response.data);
 
-    const userExist = await User.findOne({email});
+            const firstName = response.data.given_name;
+            const lastName = response.data.family_name;
+            const name = `${firstName} ${lastName}`;
+            const email = response.data.email;
+            const pic = response.data.picture;
+            console.log(name);
+            
+            if (!firstName || !lastName || !email || !pic) {
+                throw new Error("Missing required fields from Google OAuth response");
+            }
 
-    if(userExist) {
-        res.status(400);
-        throw new Error("User already exists.")
-    }
+            const existingUser = await User.findOne({email});
 
-    const createUser = await User.create({
-        name,
-        email,
-        password,
-        pic
-    })
+            if(existingUser)
+                return res.status(400).json({message: "User already exist."});
 
-    if(createUser) {
-        res.status(201).json({
-            _id: createUser._id,
-            name: createUser.name,
-            email: createUser.email,
-            isAdmin: createUser.isAdmin,
-            pic: createUser.pic,
-            token: generateToken(createUser._id),
-        });
+            const createdUser = await User.create({
+                name,
+                email,
+                pic,
+            });
+
+            res.status(200).json({
+                _id: createdUser._id,
+                name: createdUser.name,
+                email: createdUser.email,
+                isAdmin: createdUser.isAdmin,
+                pic: createdUser.pic,
+                token: generateToken(createdUser._id),
+            });
+        }).catch(err => {
+            console.error("Error in Google signup:", err.message);
+            res.status(400).json({message: "Invalid access token"});
+        })
     } else {
-        res.status(400);
-        throw new Eroor("Failed to register new user");
+        const { name,email,password,pic } = req.body;
+        try {
+            if(!name || !password || !email || name === "" || email === "" || password === "") {
+                res.status(400).json({message: "Please enter all the details in all the fields"});
+            }
+
+            const existingUser = await User.findOne({email});
+
+            if(existingUser) {
+                res.status(400).json({message: "User already exists."});
+            }
+
+            const createdUser = await User.create({
+                name,
+                email,
+                password,
+                pic
+            })
+
+            if(createdUser) {
+                res.status(200).json({
+                    _id: createdUser._id,
+                    name: createdUser.name,
+                    email: createdUser.email,
+                    isAdmin: createdUser.isAdmin,
+                    pic: createdUser.pic,
+                    token: generateToken(createdUser._id),
+                });
+            }
+        }catch(err){
+            console.error("Error in user registration:", err.message);
+            res.status(500).json({message: "Something went wrong"});
+        }
     }
 });
 
 const authenticateUser = asyncHandler(async(req, res) => {
-    const { email, password } = req.body;
+    if(req.body.googleAccessToken){
+        const {googleAccessToken} = req.body;
 
-    const user = await User.findOne({ email });
+        axios.get("https://www.googleapis.com/oauth2/v3/userinfo", {
+            headers: {
+                "Authorization": `Bearer ${googleAccessToken}`
+            }
+        }).then(async response => {
+            const email = response.data.email;
 
-    if (user && (await user.verifyPassword(password))) {
-        res.json({
-            _id: user._id,
-            name: user.name,
-            email: user.email,
-            isAdmin: user.isAdmin,
-            pic: user.pic,
-            token: generateToken(user._id),
-        });
+            const existingUser = await User.findOne({email})
+
+            if(!existingUser)
+                return res.status(404).json({meassage: "User doesn't exist"});
+            
+            res.status(200).json({
+                _id: existingUser._id,
+                name: existingUser.name,
+                email: existingUser.email,
+                isAdmin: existingUser.isAdmin,
+                pic: existingUser.pic,
+                token: generateToken(existingUser._id),
+            })           
+        }).catch(err => {
+            res.status(400).json({message: "Invalid access token"})
+        })
     } else {
-        res.status(401);
-        throw new Error("Invalid Email or Password");
-    }
+        const { email, password } = req.body;
+        
+        if (email === "" || password === "") 
+            return res.status(400).json({message: "Invalid field!"});
+        
+        try{
+            const existingUser = await User.findOne({ email });
+            if(!existingUser) 
+                return res.status(404).json({message: "User doesnt exist"});
+
+            const verified = await existingUser.verifyPassword(password);
+
+            if(!verified) 
+                return res.status(400).json({message: "Incorrect Password"});
+
+            res.status(200).json({
+                _id: existingUser._id,
+                name: existingUser.name,
+                email: existingUser.email,
+                isAdmin: existingUser.isAdmin,
+                pic: existingUser.pic,
+                token: generateToken(existingUser._id),
+            });
+        } catch(err) {
+            res.status(500).json({message: "Something went wrong"});
+        }
+    }    
 });
 
 // /api/user?search=mahek

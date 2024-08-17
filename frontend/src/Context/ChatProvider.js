@@ -7,7 +7,7 @@ const ChatProvider = ({children}) => {
     // Initialize state from localStorage
     const [user, setUser] = useState(() => {
         const storedUser = localStorage.getItem("userInfo");
-        return storedUser ? JSON.parse(storedUser) : {};
+        return storedUser && storedUser !== "undefined" ? JSON.parse(storedUser) : null;
     });
     
     const [selectedChat, setSelectedChat] = useState();
@@ -17,11 +17,14 @@ const ChatProvider = ({children}) => {
 
     // useEffect to sync state changes with localStorage
     useEffect(() => {
-        localStorage.setItem("userInfo", JSON.stringify(user));
-        if (!user._id) {
-            navigate("/");  // Redirect to home if userInfo is not valid
+
+        if (user) {
+            localStorage.setItem("userInfo", JSON.stringify(user));
+        } else {
+            localStorage.removeItem("userInfo");
+            navigate("/");  // Redirect to home if user is not logged in
         }
-    }, [user]);
+    }, [user, navigate]);
 
 
     return (

@@ -26,8 +26,8 @@ import { useToast } from "@chakra-ui/toast";
 import ChatLoading from "../ChatLoading";
 import { Spinner } from "@chakra-ui/spinner";
 import ProfileModal from "./ProfileModal";
-import NotificationBadge from "react-notification-badge";
-import { Effect } from "react-notification-badge";
+// import NotificationBadge from "react-notification-badge";
+// import { Effect } from "react-notification-badge";
 import { getSender } from "../../config/ChatLogics";
 import UserListItem from "../userAvatar/UserListItem";
 import { ChatState } from "../../Context/ChatProvider";
@@ -41,6 +41,7 @@ const SideDrawer = () => {
     const {
         setSelectedChat,
         user,
+        setUser,
         notification,
         setNotification,
         chats,
@@ -52,7 +53,13 @@ const SideDrawer = () => {
     const { isOpen, onOpen, onClose } = useDisclosure()
 
     const logout = () => {
+        // Clear all relevant states
+        setUser(null);
+
+        // Remove the user info from localStorage
         localStorage.removeItem("userInfo");
+
+        // Redirect the user to the login page
         navigate("/");
     };
 
@@ -173,10 +180,10 @@ const SideDrawer = () => {
                 <div>
                     <Menu >
                         <MenuButton p={1}>
-                            <NotificationBadge
+                            {/* <NotificationBadge
                                 count={notification.length}
                                 effect={Effect.SCALE}
-                            />
+                            /> */}
                             <BellIcon boxSize={6} m='1' color="white"/>
                         </MenuButton>
                         <MenuList pl={2}>

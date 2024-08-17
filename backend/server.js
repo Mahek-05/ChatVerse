@@ -52,8 +52,9 @@ const server = app.listen(
 const io = require("socket.io")(server, {
     pingTimeout: 60000,
     cors: {
-        origin: "https://chatverse-pqwd.onrender.com", // 3000 for local
-        // credentials: true,
+        origin: "https://localhost:3000",
+        // origin: "https://chatverse-pqwd.onrender.com", // for deployment
+        credentials: true,
     },
 });
 

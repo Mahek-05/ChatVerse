@@ -6,6 +6,8 @@ import { useState } from "react";
 import { useToast } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { ChatState } from "../../Context/ChatProvider";
+import { useGoogleLogin } from '@react-oauth/google';
+import axios from "axios";
 
 const Login = () => {
   const [show, setShow] = useState(false);
@@ -14,7 +16,7 @@ const Login = () => {
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
   const [loading, setLoading] = useState(false);
-  const {user, setUser} = ChatState();
+  const {setUser} = ChatState();
 
   const navigate = useNavigate();
 
@@ -34,23 +36,17 @@ const Login = () => {
     }
 
     try {
-      const response = await fetch('/api/user/login', {
-        method: 'POST',
+      const config = {
         headers: {
-          "Content-type": "application/json"
+          "Content-type": "application/json",
         },
-        body: JSON.stringify({
-          email,
-          password,
-        })
-      });
+      };
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'Something went wrong');
-      }
-      
-      const data = await response.json();
+      const { data } = await axios.post(
+        "/api/user/login",
+        { email, password },
+        config
+      );
       
       setUser(data);
 
@@ -76,6 +72,44 @@ const Login = () => {
       setLoading(false);
     }
   };
+
+  const handleGoogleLoginSuccess = async(tokenResponse) => {
+    const accessToken = tokenResponse.access_token;
+    setLoading(true);
+    try{
+      // login user
+      const {data} = await axios.post("/api/user/login", {
+          googleAccessToken: accessToken
+      });
+
+      setUser(data);
+
+      toast({
+          title: "Login Successful",
+          status: "success",
+          duration: 5000,
+          isClosable: true,
+          position: "bottom",
+      });
+
+      navigate("/chats");
+    }catch(error){
+      toast({
+        title: "Error Occured!",
+        description: error.message,
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+        position: "bottom",
+      });
+    }finally {
+      setLoading(false);
+    }
+  };
+
+  const googleLogin = useGoogleLogin({
+    onSuccess: handleGoogleLoginSuccess
+  });
 
   return (
     <form onSubmit={submitHandler}>
@@ -118,6 +152,15 @@ const Login = () => {
           Login
         </Button>
         
+        <Button
+          variant="outline"
+          colorScheme="pink"
+          width="100%"
+          onClick={()=>googleLogin()}
+        >
+          Login with Google
+        </Button>
+
         <Button
           variant="outline"
           colorScheme="pink"

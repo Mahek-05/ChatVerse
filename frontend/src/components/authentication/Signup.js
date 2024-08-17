@@ -6,7 +6,9 @@ import { VStack } from "@chakra-ui/layout";
 import { useToast } from "@chakra-ui/toast";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-// import axios from "axios";
+import axios from "axios";
+import { useGoogleLogin } from '@react-oauth/google';
+import { ChatState } from '../../Context/ChatProvider';
 
 
 const Signup = () => {
@@ -22,8 +24,10 @@ const Signup = () => {
   const [password, setPassword] = useState();
   const [pic, setPic] = useState();
   const [picLoading, setPicLoading] = useState(false);
+  
+  const {setUser} = ChatState();
 
-const submitHandler = async (e) => {
+  const submitHandler = async (e) => {
   e.preventDefault(); // Prevent default form submission behavior
 
   // Set loading state to true
@@ -66,24 +70,27 @@ const submitHandler = async (e) => {
     
     try {
       // Send a POST request to the server to register the user
-      // and the servers response is stored in response variable
-      const response = await fetch('/api/user', {
-        method: 'POST',
+      // and the servers response is stored in data variable
+      const config = {
         headers: {
-          "Content-type": "application/json"
+          "Content-type": "application/json",
         },
-        body: JSON.stringify({
+      };
+
+      const { data } = await axios.post(
+        "/api/user",
+        {
           name,
           email,
           password,
           pic,
-        })
-      });
+        },
+        config
+      );
 
-      // Parse the response data
-      const data = await response.json();
+      setUser(data);
 
-       // Display a success toast on successful registration
+      // Display a success toast on successful registration
       toast({
         title: "Registration Successful",
         status: "success",
@@ -92,15 +99,8 @@ const submitHandler = async (e) => {
         position: "bottom",
       });
       
-      // Store the user data in localStorage
-      localStorage.setItem("userInfo", JSON.stringify(data));
-      
-      // Set loading state to false
-      setPicLoading(false);
-      
       // Redirect to the chats page
       navigate("/chats");
-
     } catch (error) {
 
       // Display an error toast if the request fails
@@ -112,7 +112,7 @@ const submitHandler = async (e) => {
         isClosable: true,
         position: "bottom",
       });
-
+    } finally {
       // Set loading state to false
       setPicLoading(false);
     }
@@ -161,6 +161,42 @@ const submitHandler = async (e) => {
       return;
     }
   };
+
+  const handleGoogleSignupSuccess = async(tokenResponse) => {
+    const accessToken = tokenResponse.access_token;
+    
+    try {
+      const {data} = await axios.post('/api/user', {
+        googleAccessToken: accessToken,
+      });
+
+      setUser(data);
+
+      toast({
+          title: "Sign Up Successful",
+          status: "success",
+          duration: 5000,
+          isClosable: true,
+          position: "bottom",
+      });
+
+      navigate("/chats");
+    } catch(error) {
+      toast({
+        title: "Error Occured!",
+        description: error.message,
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+        position: "bottom",
+      });
+    }
+  }
+
+  const googleSignup = useGoogleLogin({
+    onSuccess: handleGoogleSignupSuccess,
+    onError: errorResponse => console.log(errorResponse),
+  });
 
   return (
     <form onSubmit={submitHandler}>
@@ -246,6 +282,15 @@ const submitHandler = async (e) => {
           colorScheme='pink'
         >
           Sign Up
+        </Button>
+        <Button
+          variant="outline"
+          width="100%"
+          style={{ marginTop: 15 }}
+          onClick={() => googleSignup()}
+          colorScheme='pink'
+        >
+          Sign Up with Google
         </Button>
       
       </VStack>
